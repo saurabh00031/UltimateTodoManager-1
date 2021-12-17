@@ -1,0 +1,130 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div>
+  
+  <div class="container pt-4 ">
+    <div class="row  p-0 mt-4">
+      <div class="col-lg-5 mx-auto shadow p-0 bg-warning txet text-info">
+        <div class="alert alert-warning">
+          <h2>TODO new</h2>
+          {% if request.user.is_authenticated %}
+          <a href="{% url 'update' request.user.id %}" class="btn btn-success">UPDATE USER</a>
+
+
+
+
+          <form action="{% url 'deletes' request.user.id %}" method="POST">
+               {% csrf_token %}
+           <input type="submit" value="Delete your account" class="btn btn-info">    
+          </form>
+
+          {% endif %}
+        </div>
+        <div class="p-4">
+
+          <form action="/add-todo/" method="POST">
+            {% csrf_token %}
+            {{form.as_p}}
+            <hr>
+            <input type="submit" value="ADD" class="btn btn-info">
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+      <div class="container pt-4 mb-5 ">
+        <div class="row  p-0 mt-4">
+          <div class="col-lg-5 mx-auto shadow p-0">
+            <div class="border">
+
+          {% if todos|length == 0 %}
+         
+            
+          <div class="p-4">
+            <br>
+            <br>
+            <div class="alert alert-info text-center">
+              <p class="" style="font-size: 30px;">NO TODOS</p>
+            </div>
+            <br>
+            <br>
+          </div>
+
+          {%else%}
+          <div>
+            <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Total todos == {{todos.count}}                   </td>
+            <table class="table">
+              <thead>
+                <tr>
+                  
+                  <th>#</th>
+                  <th>TITLE</th>
+                
+                  <th>STATS</th>
+                  <th>PRIORITY</th>
+                  <th>ACTION</th>
+                  {% comment %} <th>excitement</th> {% endcomment %}
+                </tr>
+              </thead>
+
+              <tbody>
+
+                {% for todo in todos %}
+                <tr>
+                 
+                  <td>{{forloop.counter}}</td>
+                  <td>{{todo.title}}</td>
+                  {% comment %} <td>{{todo.statusx}}</td> {% endcomment %}
+                  <td>
+                    {% if todo.status == 'C'%}
+                    🚩 
+                    {%else%}
+                    ⌛
+                    {%endif%}
+                  </td>
+                  <td>{{todo.priority}}</td>
+                  <td>
+                    <a href="/delete-todo/{{todo.id}}" title="Delete" class="">💼</a>
+                  
+                    {% if todo.status == 'P'%}
+                    <a href="/change-status/{{todo.id}}/C/" title="Mark Completed" class="">🚩 </a>
+                  
+                    {%else%}
+                    <a href="/change-status/{{todo.id}}/P/" title="Mark Pending" class=""> ⌛</a>
+                   
+                    {%endif%}
+                  </td>
+                </tr>
+                {%endfor%}
+
+
+              </tbody>
+            </table>
+          </div>
+          {%endif%}
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
